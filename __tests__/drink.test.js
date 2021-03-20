@@ -96,4 +96,56 @@ describe('Drink routes', () => {
         });
       });
   });
+
+  it('gets all drinks', async() => {
+    const drinks = await Promise.all([
+      {
+        name: 'Ice Water',
+        img: 'http://ice-water.png',
+        ingredients: JSON.stringify([
+          {
+            name: 'ice',
+            amount: 3,
+            measurement: 'oz'
+          },
+          {
+            name: 'water',
+            amount: 5,
+            measurement: 'fluid oz'
+          }
+        ]),
+        directions: [
+          'In a cocktail mixer, combine the ice and water .'
+        ]
+      },
+      {
+        name: 'Invisibility Potion',
+        img: 'http://invisibility-potion.png',
+        ingredients: JSON.stringify([
+          {
+            name: 'garlic',
+            amount: 3,
+            measurement: 'bulbs'
+          },
+          {
+            name: 'ice wraith teeth',
+            amount: 5,
+            measurement: 'teeth idk'
+          }
+        ]),
+        directions: [
+          'In a cocktail mixer, combine the ice wraith teeth and garlic bulbs.'
+        ]
+      }
+    ].map(drink => Drink.insert(drink)));
+
+    return request(app)
+      .get('/api/v1/drinks')
+      .then(res => {
+        drinks.forEach(drink => {
+          expect(res.body).toContainEqual(drink);
+        });
+      });
+  });
+
 });
