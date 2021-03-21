@@ -271,5 +271,52 @@ describe('Drink routes', () => {
       });
   });
 
+  it('deletes a drink by id', async() => {
+    const drink = await Drink.insert({
+      name: 'Ice Water',
+      img: 'http://ice-water.png',
+      ingredients: JSON.stringify([
+        {
+          name: 'ice',
+          amount: 3,
+          measurement: 'oz'
+        },
+        {
+          name: 'water',
+          amount: 5,
+          measurement: 'fluid oz'
+        }
+      ]),
+      directions: [
+        'In a glass, combine the ice and water.'
+      ]
+    });
+
+    return request(app)
+      .delete(`/api/v1/drinks/${drink.id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          id: expect.any(String),
+          name: 'Ice Water',
+          img: 'http://ice-water.png',
+          ingredients: [
+            {
+              name: 'ice',
+              amount: 3,
+              measurement: 'oz'
+            },
+            {
+              name: 'water',
+              amount: 5,
+              measurement: 'fluid oz'
+            }
+          ],
+          directions: [
+            'In a glass, combine the ice and water.'
+          ]
+        });
+      }); 
+  });
+
 });
 
