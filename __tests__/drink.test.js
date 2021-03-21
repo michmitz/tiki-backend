@@ -115,7 +115,7 @@ describe('Drink routes', () => {
           }
         ]),
         directions: [
-          'In a cocktail mixer, combine the ice and water .'
+          'In a cocktail mixer, combine the ice and water.'
         ]
       },
       {
@@ -144,6 +144,53 @@ describe('Drink routes', () => {
       .then(res => {
         drinks.forEach(drink => {
           expect(res.body).toContainEqual(drink);
+        });
+      });
+  });
+
+  it('gets a drink by id', async() => {
+    const water = await Drink.insert({
+      name: 'Ice Water',
+      img: 'http://ice-water.png',
+      ingredients: JSON.stringify([
+        {
+          name: 'ice',
+          amount: 3,
+          measurement: 'oz'
+        },
+        {
+          name: 'water',
+          amount: 5,
+          measurement: 'fluid oz'
+        }
+      ]),
+      directions: [
+        'In a cocktail mixer, combine the ice and water.'
+      ]
+    });
+
+    return request(app)
+      .get(`/api/v1/drinks/${water.id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          id: expect.any(String),
+          name: 'Ice Water',
+          img: 'http://ice-water.png',
+          ingredients: [
+            {
+              name: 'ice',
+              amount: 3,
+              measurement: 'oz'
+            },
+            {
+              name: 'water',
+              amount: 5,
+              measurement: 'fluid oz'
+            }
+          ],
+          directions: [
+            'In a cocktail mixer, combine the ice and water.'
+          ]
         });
       });
   });
