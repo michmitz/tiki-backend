@@ -1,0 +1,9 @@
+DROP TABLE IF EXISTS drinks CASCADE;
+
+CREATE TABLE drinks (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name TEXT NOT NULL,
+  img TEXT,
+  ingredients JSONB,
+  directions TEXT[]
+);
