@@ -195,4 +195,81 @@ describe('Drink routes', () => {
       });
   });
 
+  it('updates a drink by id', async() => {
+    const drink = await Drink.insert({
+      name: 'Ice Water',
+      img: 'http://ice-water.png',
+      ingredients: JSON.stringify([
+        {
+          name: 'ice',
+          amount: 3,
+          measurement: 'oz'
+        },
+        {
+          name: 'water',
+          amount: 5,
+          measurement: 'fluid oz'
+        }
+      ]),
+      directions: [
+        'In a glass, combine the ice and water.'
+      ]
+    });
+
+    return request(app)
+      .put(`/api/v1/drinks/${drink.id}`)
+      .send({
+        name: 'Ice Water with Lemon',
+        img: 'http://ice-water.png',
+        ingredients: JSON.stringify([
+          {
+            name: 'ice',
+            amount: 3,
+            measurement: 'oz'
+          },
+          {
+            name: 'water',
+            amount: 5,
+            measurement: 'fluid oz'
+          },
+          {
+            name: 'lemon',
+            amount: .5,
+            measurement: 'fluid oz'
+          }
+        ]),
+        directions: [
+          'In a glass, combine the ice, water, lemon and stir.'
+        ] 
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          id: expect.any(String),
+          name: 'Ice Water with Lemon',
+          img: 'http://ice-water.png',
+          ingredients: [
+            {
+              name: 'ice',
+              amount: 3,
+              measurement: 'oz'
+            },
+            {
+              name: 'water',
+              amount: 5,
+              measurement: 'fluid oz'
+            },
+            {
+              name: 'lemon',
+              amount: .5,
+              measurement: 'fluid oz'
+            }
+          ],
+          directions: [
+            'In a glass, combine the ice, water, lemon and stir.'
+          ]
+        });
+      });
+  });
+
 });
+
